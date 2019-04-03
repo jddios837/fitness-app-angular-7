@@ -9,10 +9,14 @@ import { Store } from "../store";
 
 //feature modules
 import { AuthModule } from "./auth/auth.module";
+import { AppHeaderComponent } from './components/app-header/app-header.component';
+import { AppNavComponent } from './components/app-nav/app-nav.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AppHeaderComponent,
+    AppNavComponent
   ],
   imports: [
     BrowserModule,

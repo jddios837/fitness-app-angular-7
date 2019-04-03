@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from "@angular/router";
 
 // import { Store } from "store";
 import { tap } from 'rxjs/operators';
@@ -42,6 +43,7 @@ export class AuthService {
 		// })
 
 	constructor(
+		private router: Router,
 		private store: Store,
 		private af: AngularFireAuth
 	) {}
@@ -53,6 +55,11 @@ export class AuthService {
 
 	loginUser(email: string, password: string) {
 		return this.af.auth
-			.signInAndRetrieveDataWithEmailAndPassword(email, password);
+			.signInWithEmailAndPassword(email, password);
+	}
+
+	async logoutUser() {
+		await this.af.auth.signOut();
+		this.router.navigate(['/auth/login']);
 	}
 }
