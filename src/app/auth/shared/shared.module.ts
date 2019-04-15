@@ -6,6 +6,9 @@ import { AuthFormComponent } from "./components/auth-form/auth-form.component";
 
 import { AuthService } from "./services/auth/auth.service";
 
+// guards
+import { AuthGuard } from "./guards/auth.guard";
+
 @NgModule({
   declarations: [
     AuthFormComponent
@@ -23,7 +26,8 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
-        AuthService
+        AuthService,
+        AuthGuard
       ]
     }
   }
