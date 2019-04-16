@@ -19,11 +19,21 @@ export interface Meal {
 })
 export class MealsService {
 
-  // meals$: Observable<any> = this.db.collection(`meals/${this.uid}`).valueChanges()
-  meals$: Observable<any> = this.db.collection(`meals`).valueChanges()
+  meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).valueChanges()
     .pipe(
-      tap(next => this.store.set('meals', next))
+      tap(next => {
+        this.store.set('meals', next)
+      })
     );
+
+  // meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).snapshotChanges()
+  //   .pipe(
+  //     tap(next => {
+  //       console.log('Key', next);
+        
+  //       this.store.set('meals', next)
+  //     })
+  //   );
 
   constructor(
     private store: Store,
@@ -34,5 +44,13 @@ export class MealsService {
 
   get uid() {
     return this.authService.user.uid;
+  }
+
+  addMeal(meal: Meal) {
+    this.db.collection(`meals`).add({uid: this.uid, ...meal});
+  }
+
+  removeMeal(key: string) {
+    return this.db.doc(`meals/${key}`).delete();
   }
 }

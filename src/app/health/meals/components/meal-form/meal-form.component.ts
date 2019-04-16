@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
+import { Meal } from 'src/app/health/shared/services/meals/meals.service';
 
 @Component({
   selector: 'meal-form',
@@ -15,6 +16,9 @@ import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from "@ang
                 type="text"
                 placeholder="ej. Desayuno Libiano"
                 formControlName="name">
+              <div class="error" *ngIf="required">
+                El nombre del plato es requerido
+              </div>  
             </label>
           </div>
           
@@ -23,13 +27,20 @@ import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from "@ang
               <h3>Food</h3>
               <button 
                 type="button"
-                class="meal-form__add">
+                class="meal-form__add"
+                (click)="addIngredient()">
                 <img src="assets/img/add-white.svg">
                 Add food 
               </button>
             </div>
             <div formArrayName="ingredients">
-              <label *ngForm="let c of ingredients.controls; index as i;"></label>
+              <label *ngFor="let c of ingredients.controls; index as i;">
+                <input [formControlName]="i" placeholder="e.g. Eggs">
+                <span 
+                  class="meal-form__remove"
+                  (click)="removeIngredient(i);">
+                </span>
+              </label>
             </div>
           </div>
 
@@ -55,6 +66,9 @@ import { FormArray, FormGroup, FormBuilder, FormControl, Validators } from "@ang
 })
 export class MealFormComponent  {
 
+  @Output()
+  create = new EventEmitter<Meal>();
+
   form = this.fb.group({
     name: ['', Validators.required],
     ingredients: this.fb.array([''])
@@ -64,9 +78,29 @@ export class MealFormComponent  {
     private fb: FormBuilder
   ) { }
 
+  get required() {
+    return (
+      this.form.get('name').hasError('required') &&
+      this.form.get('name').touched
+    )
+  }
+
+  get ingredients() {
+    return this.form.get('ingredients') as FormArray;
+  }
+
+  addIngredient() {
+    this.ingredients.push(new FormControl(''));
+  }
+
+  removeIngredient(index: number) {
+    this.ingredients.removeAt(index);
+  }
+
   createMeal() {
-    console.log(this.form.value);
-    
+    if (this.form.valid) {
+      this.create.emit(this.form.value);
+    }
   }
 
 }

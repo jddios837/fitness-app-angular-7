@@ -5,9 +5,15 @@ import { RouterModule } from "@angular/router";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 
 import { MealsService } from "./services/meals/meals.service";
+import { ListItemComponent } from './components/list-item/list-item.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ListItemComponent
+  ],
+  exports: [
+    ListItemComponent
+  ],
   imports: [
     CommonModule,
     RouterModule,
