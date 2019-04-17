@@ -19,7 +19,7 @@ export interface Meal {
 })
 export class MealsService {
 
-  meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).valueChanges()
+  meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).snapshotChanges()
     .pipe(
       tap(next => {
         this.store.set('meals', next)
