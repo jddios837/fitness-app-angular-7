@@ -63,7 +63,9 @@ export class MealsComponent implements OnInit, OnDestroy {
   }
 
   removeMeal(event: Meal) {
-    this.mealsService.removeMeal(event.$key);
+    console.log('Remove meal ', event.id);
+    
+    this.mealsService.removeMeal(event.id);
   }
 
 }

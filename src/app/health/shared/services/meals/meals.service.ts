@@ -4,12 +4,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from 'src/app/auth/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
 
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 export interface Meal {
   name: string,
   ingredients: string[],
   timestamp: number,
+  id: string,
   $key: string,
   $exists: () => boolean
 }
@@ -21,9 +22,16 @@ export class MealsService {
 
   meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).snapshotChanges()
     .pipe(
-      tap(next => {
-        this.store.set('meals', next)
-      })
+      map(
+        (action) => {
+            let result = action.map( a => {
+              return {...a.payload.doc.data(),
+                id: a.payload.doc.id
+              };
+            });
+            this.store.set('meals', result)  
+        }
+      )
     );
 
   // meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).snapshotChanges()
