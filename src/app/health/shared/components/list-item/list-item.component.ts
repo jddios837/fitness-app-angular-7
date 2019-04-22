@@ -54,7 +54,7 @@ export class ListItemComponent implements OnInit {
   }
 
   getRoute(item: any) {
-    return [`../meals`, item.$key]
+    return [`../meals`, item.id]
   }
 
   toggle() {

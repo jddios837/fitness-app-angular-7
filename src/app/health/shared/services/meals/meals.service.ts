@@ -4,7 +4,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from 'src/app/auth/shared/services/auth/auth.service';
 import { Observable } from 'rxjs';
 
-import { tap, map } from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
+import { of } from 'rxjs'
 
 export interface Meal {
   name: string,
@@ -19,6 +20,15 @@ export interface Meal {
   providedIn: 'root'
 })
 export class MealsService {
+
+  getMeal(id: string) {
+    if (!id) return of({});
+
+    return this.store.select<Meal[]>('meals').pipe(
+      filter(Boolean),
+      map(meals => meals.find((meal: Meal) => meal.id === id))
+    )
+  }
 
   meals$: Observable<any> = this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).snapshotChanges()
     .pipe(
@@ -58,7 +68,11 @@ export class MealsService {
     this.db.collection(`meals`).add({uid: this.uid, ...meal});
   }
 
-  removeMeal(key: string) {
-    return this.db.doc(`meals/${key}`).delete();
+  updateMeal(id: string, meal: Meal) {
+    this.db.collection(`meals`, ref => ref.where('uid', '==', this.uid)).doc(id).update(meal);
+  }
+
+  removeMeal(id: string) {
+    return this.db.doc(`meals/${id}`).delete();
   }
 }
