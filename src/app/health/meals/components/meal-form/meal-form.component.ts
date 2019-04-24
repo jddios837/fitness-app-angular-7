@@ -11,7 +11,7 @@ import { Meal } from 'src/app/health/shared/services/meals/meals.service';
         <form [formGroup]="form">
           <div class="meal-form__name">
             <label>
-              <h3>Meal name</h3> 
+              <h3>Nombre de la Comida</h3> 
               <input 
                 type="text"
                 placeholder="ej. Desayuno Libiano"
@@ -24,13 +24,13 @@ import { Meal } from 'src/app/health/shared/services/meals/meals.service';
           
           <div class="meal-form__food">
             <div class="meal-form__subtitle">
-              <h3>Food</h3>
+              <h3>Ingredientes</h3>
               <button 
                 type="button"
                 class="meal-form__add"
                 (click)="addIngredient()">
                 <img src="assets/img/add-white.svg">
-                Add food 
+                 Agregar Ingrediente 
               </button>
             </div>
             <div formArrayName="ingredients">
